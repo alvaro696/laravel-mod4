@@ -10,6 +10,7 @@ import Perfil from './pages/Perfil';
 import PrivateRoute from './components/PrivateRoute';
 import Inicio from './pages/Inicio';
 import "antd/dist/reset.css";
+import VehicleList from './pages/VehicleList';
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard />}>
               <Route index element={<Inicio />} />
               <Route path="perfil" element={<Perfil />} />
+              <Route path="vehicles" element={<VehicleList />} />
             </Route>
           </Route>
           {/* Ruta por defecto redirige al Login */}
