@@ -1,27 +1,39 @@
-// resources/js/pages/Login.jsx
 import React, { useState } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '../store/authSlice';
 import api from '../api';
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onFinish = async (values) => {
     setLoading(true);
     try {
       const response = await api.post('/login', values);
       message.success('Inicio de sesión exitoso');
+
+      // Guardar el token y el email en el store
+      dispatch(setCredentials({
+        token: response.data.access_token,
+        email: response.data.email,
+      }));
+
+      // Guardar el token en localStorage (opcional)
       localStorage.setItem('token', response.data.access_token);
-      // Aquí podrías redirigir o actualizar el estado global
+
+      // Redirigir al usuario a otra ruta
+      navigate('/dashboard'); // Cambia '/dashboard' por la ruta que desees
     } catch (error) {
       message.error('Credenciales inválidas');
       console.error(error);
     }
     setLoading(false);
   };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: -30 }}
