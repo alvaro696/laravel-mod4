@@ -17,17 +17,14 @@ const Login = () => {
       const response = await api.post('/login', values);
       message.success('Inicio de sesión exitoso');
 
-      // Guardar el token y el email en el store
       dispatch(setCredentials({
         token: response.data.access_token,
         email: response.data.email,
       }));
 
-      // Guardar el token en localStorage (opcional)
       localStorage.setItem('token', response.data.access_token);
 
-      // Redirigir al usuario a otra ruta
-      navigate('/dashboard'); // Cambia '/dashboard' por la ruta que desees
+      navigate('/dashboard'); 
     } catch (error) {
       message.error('Credenciales inválidas');
       console.error(error);

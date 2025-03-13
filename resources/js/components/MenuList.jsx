@@ -1,4 +1,3 @@
-// src/components/MenuList.jsx
 import React from "react";
 import { Menu } from "antd";
 import {
@@ -17,11 +16,9 @@ import { useAuth } from "../context/AuthContext";
 const MenuList = ({ darkTheme }) => {
   const { user } = useAuth();
 
-  // Función auxiliar para verificar si el usuario tiene un permiso
   const hasPermission = (perm) =>
     user?.permissions?.map((p) => p.toLowerCase()).includes(perm.toLowerCase());
 
-  // Elementos estáticos que siempre se muestran
   const staticItems = [
     { key: "home", icon: <HomeOutlined />, link: "/", label: "Home" },
     { key: "progress", icon: <PieChartTwoTone />, link: "/progress", label: "Progreso" },

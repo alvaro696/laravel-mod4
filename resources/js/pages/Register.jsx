@@ -1,4 +1,3 @@
-// resources/js/pages/Register.jsx
 import React, { useState } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { motion } from 'framer-motion';
@@ -11,7 +10,6 @@ const Register = () => {
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            // Se envía la petición de registro a la API de Laravel
             const response = await api.post('/register', {
                 name: values.name,
                 email: values.email,
@@ -19,9 +17,7 @@ const Register = () => {
                 password_confirmation: values.password_confirmation,
             });
             message.success('Registro exitoso');
-            // Se guarda el token de autenticación en localStorage (si es necesario)
             localStorage.setItem('token', response.data.access_token);
-            // Aquí puedes redirigir al usuario o actualizar el estado global
         } catch (error) {
             message.error('Error en el registro');
             console.error(error);
