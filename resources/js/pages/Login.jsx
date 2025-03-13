@@ -1,3 +1,4 @@
+// resources/js/pages/Login.jsx
 import React, { useState } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { motion } from 'framer-motion';
@@ -5,12 +6,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../store/authSlice';
 import api from '../api';
+import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Función para el login tradicional con email y contraseña
   const onFinish = async (values) => {
     setLoading(true);
     try {
@@ -23,14 +26,41 @@ const Login = () => {
       }));
 
       localStorage.setItem('token', response.data.access_token);
-
-      navigate('/dashboard'); 
+      navigate('/dashboard');
     } catch (error) {
       message.error('Credenciales inválidas');
       console.error(error);
     }
     setLoading(false);
   };
+
+  // Función que se ejecuta cuando el login con Google es exitoso
+  const handleGoogleSuccess = async (credentialResponse) => {
+    // credentialResponse.credential contiene el token JWT de Google
+    const googleToken = credentialResponse.credential;
+    try {
+      // Envía el token a tu backend para verificarlo y obtener un token de la API
+      const response = await api.post('/login/google', { token: googleToken });
+      message.success('Inicio de sesión con Google exitoso');
+
+      dispatch(setCredentials({
+        token: response.data.access_token,
+        email: response.data.email,
+      }));
+
+      localStorage.setItem('token', response.data.access_token);
+      navigate('/dashboard');
+    } catch (error) {
+      message.error('Error al iniciar sesión con Google');
+      console.error(error);
+    }
+  };
+
+  // Función que se ejecuta en caso de error al iniciar sesión con Google
+  const handleGoogleError = () => {
+    message.error('Error al iniciar sesión con Google');
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -30 }}
@@ -73,6 +103,12 @@ const Login = () => {
       <div style={{ textAlign: 'center', marginTop: '10px' }}>
         <span>¿No tienes cuenta? </span>
         <Link to="/register">Regístrate</Link>
+      </div>
+      <div style={{ textAlign: 'center', marginTop: '20px' }}>
+        <GoogleLogin
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleError}
+        />
       </div>
     </motion.div>
   );

@@ -11,28 +11,32 @@ import PrivateRoute from './components/PrivateRoute';
 import Inicio from './pages/Inicio';
 import "antd/dist/reset.css";
 import VehicleList from './pages/VehicleList';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const App = () => {
+  const clientId = '907944692239-5q2hl89uj7ht4s3f502js4aokvka6brm.apps.googleusercontent.com';
   return (
-    <Provider store={store}>
-      <Router>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+    <GoogleOAuthProvider clientId={clientId}>
+      <Provider store={store}>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
 
-          <Route element={<PrivateRoute />}>
-            <Route path="/dashboard" element={<Dashboard />}>
-              <Route index element={<Inicio />} />
-              <Route path="perfil" element={<Perfil />} />
-              <Route path="vehicles" element={<VehicleList />} />
+            <Route element={<PrivateRoute />}>
+              <Route path="/dashboard" element={<Dashboard />}>
+                <Route index element={<Inicio />} />
+                <Route path="perfil" element={<Perfil />} />
+                <Route path="vehicles" element={<VehicleList />} />
+              </Route>
             </Route>
-          </Route>
-          {/* Ruta por defecto redirige al Login */}
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-      </Router>
-    </Provider>
+            {/* Ruta por defecto redirige al Login */}
+            <Route path="*" element={<Navigate to="/login" />} />
+          </Routes>
+        </Router>
+      </Provider>
+    </GoogleOAuthProvider>
   );
 };
 
