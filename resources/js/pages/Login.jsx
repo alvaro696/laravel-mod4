@@ -1,4 +1,3 @@
-// resources/js/pages/Login.jsx
 import React, { useState } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { motion } from 'framer-motion';
@@ -13,7 +12,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Función para el login tradicional con email y contraseña
   const onFinish = async (values) => {
     setLoading(true);
     try {
@@ -34,12 +32,9 @@ const Login = () => {
     setLoading(false);
   };
 
-  // Función que se ejecuta cuando el login con Google es exitoso
   const handleGoogleSuccess = async (credentialResponse) => {
-    // credentialResponse.credential contiene el token JWT de Google
     const googleToken = credentialResponse.credential;
     try {
-      // Envía el token a tu backend para verificarlo y obtener un token de la API
       const response = await api.post('/login/google', { token: googleToken });
       message.success('Inicio de sesión con Google exitoso');
 
@@ -56,7 +51,6 @@ const Login = () => {
     }
   };
 
-  // Función que se ejecuta en caso de error al iniciar sesión con Google
   const handleGoogleError = () => {
     message.error('Error al iniciar sesión con Google');
   };

@@ -13,14 +13,10 @@ class AuthController extends Controller
 {
     public function loginWithGoogle(Request $request)
     {
-        // 1. Validar que venga el token
         $request->validate([
             'token' => 'required|string',
         ]);
 
-        // 2. Verificar el token con Google
-        //    Instala la librería oficial: composer require google/apiclient
-        //    Luego, crea un objeto GoogleClient con tu CLIENT_ID
         $client = new GoogleClient (['client_id' => env('GOOGLE_CLIENT_ID')]);
         $payload = $client->verifyIdToken($request->token);
 
@@ -28,26 +24,20 @@ class AuthController extends Controller
             return response()->json(['message' => 'Token de Google inválido'], 401);
         }
 
-        // 3. Obtener datos del usuario desde el payload
-        //    Por ejemplo: email, name, picture, etc.
         $googleEmail = $payload['email'];
         $googleName  = $payload['name'] ?? 'Usuario de Google';
 
-        // 4. Buscar o crear el usuario en tu base de datos
         $user = User::where('email', $googleEmail)->first();
         if (!$user) {
             $user = User::create([
                 'name'     => $googleName,
                 'email'    => $googleEmail,
-                // Genera una contraseña aleatoria (o puedes dejarla vacía si no la usas)
                 'password' => Hash::make(Str::random(24)),
             ]);
         }
 
-        // 5. Generar un token de tu API (Laravel Sanctum, por ejemplo)
         $apiToken = $user->createToken('authToken')->plainTextToken;
 
-        // 6. Retornar el token de tu API
         return response()->json([
             'access_token' => $apiToken,
             'token_type'   => 'Bearer',
